@@ -1,0 +1,224 @@
+/* ---------------------------------- PHP ----------------------------------- */
+extension      = PHP,HTML
+code_type      = PHP
+comment_prefix = "/* "
+comment_suffix = "*/"
+quick_comment  = "#"
+highlight_tags = "<,>;"
+tag_end        = "/"
+margins        = 1 200 20 80
+comment_formatting = NONE;
+
+/* ALT keys */
+a-PFLine = "1=dbCol 2=dbCol2 3={ 4={{ 5=Eval 6=Css 7=Css* 8=? 9=Tag 10=Att 11=Par 12=Sib"
+key a-F1 = MACRO fnpick php-data-cmds
+key a-F2 = MACRO fnpick php-data-cmds $table->@(' ');
+key a-F3 = MACRO instr /{~}/
+key a-F4 = MACRO instr /{{~}}/
+key a-F5 = MACRO instr /{{!! ~ !!}}/
+key a-F6 = MACRO cssbulma
+key a-F7 = CMDTEXT cssbulma p 1
+key a-F8 = MACRO fnpick classes-bulma
+key a-F9 = CMDTEXT wraptag p
+key a-F10 = MACRO instr /="~"/
+key a-F11 = MACRO navindent parent
+key a-F12 = MACRO navindent sibling
+
+key a-0 = MSG [Php] 1=Prof 2=Xpdr 3=XpList 4=XpdrH 5=EnV 6=Link 7=? 8=New 9=View
+key a-1 = EDIT C:\Users\cpgle\cjp\x2\php.prof
+key a-2 = MACRO chooser --c xs php --t PHP
+key a-3 = MACRO cmdout xpdr.php xs php
+key a-4 = MACRO cmdout xpdr.html xs html tags
+key a-5 = MACRO chooser --c set|cut = --t Environment Variables
+key a-6 = MACRO instr ?<a href="~"> </a>?
+key a-7 = MSG Alt-7
+key a-8 = CMDTEXT cmdout new.php merge %cjp%\snips\html5-bulma.tmpl
+key a-9 = CMDTEXT cmdout new.php merge %cjp%\snips\php-view.tmpl
+
+key a-` = MACRO instr /function(){~}/
+key a-- = MACRO instr /->with(~)/
+key a-= = MACRO instr /'~' => ''/
+key a-; = MACRO instr /: '~'/
+key a-' = MACRO instr /="~"/
+key a-\ = MACRO wrapblock { } outdent
+key a-/ = MACRO wrapit {
+
+expand_keyword = fn \1
+expand_replace = 'function \1(\c) {'
+expand_replace = '}'
+
+expand_keyword = fnp \1
+expand_replace = 'public function \1(\c) {'
+expand_replace = '}'
+
+expand_keyword = class \1
+expand_replace = 'namespace \c;'
+expand_replace = 'use myLib;'
+expand_replace = ''
+expand_replace = 'class \1 {'
+expand_replace = '} # \1'
+
+expand_keyword = subclass \1
+expand_replace = 'class \c extends \1 {'
+expand_replace = '}'
+
+expand_keyword = cto
+expand_replace = 'public function __construct($\c) {'
+expand_replace = '}'
+
+expand_keyword = ? \1
+expand_replace = '$\1 = \c;'
+
+expand_keyword = "% \1"
+expand_replace = 'expand \1 with %'
+
+expand_keyword = "& \1"
+expand_replace = 'expand \1 with &'
+
+expand_keyword = "* \1"
+expand_replace = 'expand \1 with *'
+
+expand_keyword = \1 .
+expand_replace = '\1->\c;'
+
+expand_keyword = v \1
+expand_replace = 'private $\1=\c;'
+
+expand_keyword = vp \1
+expand_replace = 'public $\1=\c;'
+
+expand_keyword = vpr \1
+expand_replace = 'protected $\1=\c;'
+
+expand_keyword = snip
+expand_replace = '<?php'
+expand_replace = '  \c'
+expand_replace = '?>'
+
+expand_keyword = offon
+expand_replace = '?>'
+expand_replace = '  \c'
+expand_replace = '<?php'
+
+expand_keyword = ivar
+expand_replace = '<?php echo $\c; ?>'
+
+expand_keyword = say
+expand_replace = "echo '\c\n'; "
+
+expand_keyword = saya \1
+expand_replace = 'print_r($\1);'
+
+expand_keyword = sayarr \1
+expand_replace = 'for ($i=0; $i<count($\1); $i++) {'
+expand_replace = '  \c$\1[$i];'
+expand_replace = '} # loop over $\1'
+
+expand_keyword = sayb
+expand_replace = "print '\c<br/>';"
+
+expand_keyword = sayo \1
+expand_replace = 'foreach ($\1 as $attr => $value) {'
+expand_replace = '  # $attr $value'
+expand_replace = '} # loop over \1 attributes'
+
+expand_keyword = if
+expand_replace = 'if (\c) {'
+expand_replace = '}'
+
+expand_keyword = iff
+expand_replace = 'if (\c) {'
+expand_replace = '} elseif () {'
+expand_replace = '}'
+
+expand_keyword = do
+expand_replace = 'foreach (\c) {'
+expand_replace = '}'
+
+expand_keyword = dow
+expand_replace = 'do {'
+expand_replace = '} while (\c);'
+
+expand_keyword = while
+expand_replace = 'while (\c) {'
+expand_replace = '}'
+
+expand_keyword = for \1
+expand_replace = 'for ($\1=1; $\1<=\c; $\1++) {'
+expand_replace = '}'
+
+expand_keyword = sw \1
+expand_replace = 'switch ($\1) {'
+expand_replace = "case '\c':"
+expand_replace = '  break;'
+expand_replace = 'default:'
+expand_replace = '} # end switch $\1'
+
+expand_keyword = arr1 \1
+expand_replace = '$\1[] = \c;'
+
+expand_keyword = arr \1
+expand_replace = '$\1 = array('
+expand_replace = '  \c'
+expand_replace = "  '@' => '@',"
+expand_replace = ');'
+
+expand_keyword = arrf \1
+expand_replace = "$\1 = ['\c',''];"
+
+expand_keyword = arr2str \1
+expand_replace = "$\c = implode('\n', $\1);"
+
+expand_keyword = vpost \1
+expand_replace = "$\1=$_POST['\1'];"
+expand_replace = "if (!isset($\1)) $\1=\c;"
+
+expand_keyword = fdate
+expand_replace = "date('Y-m-d')"
+
+expand_keyword = ftime
+expand_replace = "date('H:i:s')"
+
+expand_keyword = new
+expand_replace = '<?php'
+expand_replace = '\c'
+expand_replace = '?>'
+
+expand_keyword = rte \1
+expand_replace = "Route::get('/\c', function() {"
+expand_replace = "  return view('\1');"
+expand_replace = '});'
+
+expand_keyword = rte \1
+expand_replace = "Route::get('/\c', '\1Controller @');"
+
+expand_keyword = rtr \1
+expand_replace = "Route::resource('\c\1', '\1Controller');"
+
+expand_keyword = sec \1
+expand_replace = "@section('\1')\c"
+expand_replace = '@endsection'
+
+expand_keyword = y
+expand_replace = "@yield('\c')"
+
+expand_keyword = inc
+expand_replace = "@include('\c')"
+
+expand_keyword = xt
+expand_replace = "@extends('\c')"
+
+expand_keyword = ife
+expand_replace = '@if (\c)'
+expand_replace = '@else'
+expand_replace = '@endif'
+
+expand_keyword = auth
+expand_replace = '@auth'
+expand_replace = '@else'
+expand_replace = '@endauth'
+
+expand_keyword = ea \1
+expand_replace = '@foreach($\1 as $\c)'
+expand_replace = '@endforeach'
+
