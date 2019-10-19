@@ -31,7 +31,7 @@ key a-3 = MACRO cmdout xpdr.php xs php
 key a-4 = MACRO cmdout xpdr.html xs html tags
 key a-5 = MACRO chooser --c set|cut = --t Environment Variables
 key a-6 = MACRO instr ?<a href="~"> </a>?
-key a-7 = MSG Alt-7
+key a-7 = MACRO cmdin type %cjp%\work\frequent-files.txt
 key a-8 = CMDTEXT cmdout new.php merge %cjp%\snips\html5-bulma.tmpl
 key a-9 = CMDTEXT cmdout new.php merge %cjp%\snips\php-view.tmpl
 
@@ -69,10 +69,7 @@ expand_replace = '}'
 expand_keyword = ? \1
 expand_replace = '$\1 = \c;'
 
-expand_keyword = "% \1"
-expand_replace = 'expand \1 with %'
-
-expand_keyword = "& \1"
+expand_keyword = "\1 &"
 expand_replace = 'expand \1 with &'
 
 expand_keyword = "* \1"
@@ -184,7 +181,10 @@ expand_replace = '<?php'
 expand_replace = '\c'
 expand_replace = '?>'
 
-expand_keyword = rte \1
+expand_keyword = ret
+expand_replace = 'return \c'
+
+expand_keyword = rt \1
 expand_replace = "Route::get('/\c', function() {"
 expand_replace = "  return view('\1');"
 expand_replace = '});'
