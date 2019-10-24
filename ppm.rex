@@ -84,10 +84,13 @@ newview: procedure expose APP_HOME
     else viewdir='.'
     viewname=viewdir'\'name'.blade.php'
     tmpl=value('cjp',,'ENVIRONMENT')||'\snips\php-view.tmpl'
-    if \SysFileExists(viewdir) then ADDRESS CMD 'mkdir' viewdir
-    ADDRESS CMD 'merge' tmpl name '>>' viewname
-    if SysFileExists(viewname) then say 'New view created:' viewname
-    else                            say 'No view created' viewname
+    if askYN('Create view "'viewname'"?') then do
+      if \SysFileExists(viewdir) then ADDRESS CMD 'mkdir' viewdir
+      ADDRESS CMD 'merge' tmpl name '>>' viewname
+      if SysFileExists(viewname) then say 'New view created:' viewname
+      else                            say 'No view created' viewname
+    end
+    else say 'Ok'
   end
   return
 
@@ -99,11 +102,25 @@ makemodel: procedure
 
 makecontroller: procedure
   parse arg name isResource
-  if name='' then say 'Please specify: controller-name [isResource]'
+  if name='' then do
+    say 'Please specify: controller-name [isResource]'
+    return
+  end
+  if isResource='' then call prompt 'php artisan make:controller' name'Controller' option
   else do
-    if isResource='' then option=''
-    else                  option='--resource'
-    call prompt 'php artisan make:controller' name'Controller' option
+    tmpl=getTemplate('php-ctlr.tmpl')
+    if tmpl='' then call prompt 'php artisan make:controller' name'Controller --resource'
+    else 'merge' tmpl name lower(name)
+    fnget='index create show edit'
+    fnpost='store update destroy'
+    do w=1 to words(fnget)
+      fn=word(fnget,w)
+      say "Route::get('/"lower(name)"/"fn"', '"name"Controller@"fn"');"
+    end w
+    do w=1 to words(fnpost)
+      fn=word(fnpost,w)
+      say "Route::post('/"lower(name)"/"fn"', '"name"Controller@"fn"');"
+    end w
   end
   return
 
@@ -142,6 +159,12 @@ newdb: procedure
     say 'Database commands saved to' outp
   end
   return
+
+getTemplate: procedure
+  parse arg template
+  fn=value('cjp',,'ENVIRONMENT')||'\snips\'template
+  if SysFileExists(fn) then return fn
+  return ''
 
 help: procedure
   say 'ppm -- A PHP-Laravel utility tool'
