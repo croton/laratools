@@ -4,7 +4,7 @@ APP_HOME='c:\xampp\htdocs'
 select
   when pfx='new' then call newproject params
   when pfx='hosts' then type 'c:\Windows\System32\drivers\etc\hosts'
-  when pfx='v' then call vhost params
+  when pfx='vhost' then call vhost params
   when pfx='newdb' then call newdb params
   when pfx='auth' then call makeauth
   when pfx='mod' then call makemodel params
@@ -22,7 +22,7 @@ select
   when pfx='rollback' then call prompt 'php artisan migrate:rollback'
   when pfx='test' then call prompt 'php artisan make:test' params'Test'
   when pfx='undo' then call prompt 'php artisan migrate:rollback'
-  when pfx='ver' then say '0.3'
+  when pfx='v' then say '0.3'
   otherwise call help
 end
 exit
@@ -106,7 +106,7 @@ makecontroller: procedure
     say 'Please specify: controller-name [isResource]'
     return
   end
-  if isResource='' then call prompt 'php artisan make:controller' name'Controller' option
+  if isResource='' then call prompt 'php artisan make:controller' name'Controller'
   else do
     tmpl=getTemplate('php-ctlr.tmpl')
     if tmpl='' then call prompt 'php artisan make:controller' name'Controller --resource'

@@ -11,6 +11,7 @@ select
   when pfx='x' then call doXmac params
   when pfx='users' then call info 'users', params
   when pfx='bit' then call convertBit params
+  when pfx='grant' then call granter params
   otherwise call help
 end
 exit
@@ -48,19 +49,15 @@ info: procedure expose cb DB_NAME
   cb~copy(dcmd)
   return
 
-picktableFromList: procedure expose basedir
-  parse arg name
-  tablelist=.Stream~new(basedir'\tables-list.xfn')
-  if tablelist=.nil then return ''
-  tables=tablelist~arrayin
-  if name<>'' then do
-    sub=.Array~new
-    loop t over tables
-      if abbrev(t, name) then sub~append(t)
-    end
-    if sub~items>0 then tables=sub
-  end
-  return pickAItem(tables)
+doinsert: procedure expose cb
+  parse arg name cols
+  if cols='' then cols='id name'
+  val='1'
+  vals=copies(val', ', words(cols)-1)||val
+  dcmd='insert into' name '('||space(cols,1,',')||') values ('enquote(cols)');'
+  say dcmd
+  cb~copy(dcmd)
+  return
 
 newrow: procedure expose cb
   parse arg db
@@ -78,21 +75,58 @@ newrow: procedure expose cb
   cb~copy(dcmd)
   return
 
+doXmac: procedure expose cb
+  parse arg name cols
+  if cols='' then cols='id name'
+  xcmd="'macro chooser" cols '--t' name "--multi'"
+  say xcmd; cb~copy(xcmd)
+  return
+
+convertBit: procedure expose cb
+  parse arg name title
+  coldef='convert('name',UNSIGNED INTEGER) AS' title
+  say name '->' coldef
+  cb~copy(coldef)
+  return
+
+granter: procedure
+  parse arg options
+  /* if db='' then db=pickAItem(cmdout('echo show databases |mysql -u root --skip-column-names'))
+  if db='' then return
+  */
+  say 'Grant ALL privileges to a database user:'
+  usr=pickAItem(cmdout("echo select db, user from db where host like 'localhost' |mysql -u root mysql --skip-column-names"))
+  if usr='' then say 'Ok'
+  else do
+    parse var usr db user
+    dbcmd='GRANT ALL ON' db".* TO '"user"'@'localhost'"
+    -- dbcmd2='mysql -u root mysql -e "select database(), user(), curdate();"'
+    -- call prompt dbcmd2
+    if askYN('Run command as root?' dbcmd) then ADDRESS CMD 'mysql -u root mysql -e "'dbcmd'"'
+    else say 'Ok'
+  end
+  return
+
+/* --------------------------- Private functions ---------------------------- */
+picktableFromList: procedure expose basedir
+  parse arg name
+  tablelist=.Stream~new(basedir'\tables-list.xfn')
+  if tablelist=.nil then return ''
+  tables=tablelist~arrayin
+  if name<>'' then do
+    sub=.Array~new
+    loop t over tables
+      if abbrev(t, name) then sub~append(t)
+    end
+    if sub~items>0 then tables=sub
+  end
+  return pickAItem(tables)
+
 picktableByDB: procedure
   parse arg db
   if db='' then db='mysql'
   choices=cmdout('echo show tables |mysql -u root' db '--skip-column-names')
   return pickAItem(choices)
-
-doinsert: procedure expose cb
-  parse arg name cols
-  if cols='' then cols='id name'
-  val='1'
-  vals=copies(val', ', words(cols)-1)||val
-  dcmd='insert into' name '('||space(cols,1,',')||') values ('enquote(cols)');'
-  say dcmd
-  cb~copy(dcmd)
-  return
 
 enquote: procedure
   parse arg items
@@ -111,20 +145,6 @@ join: procedure
     list=list item
   end
   return strip(list)
-
-doXmac: procedure expose cb
-  parse arg name cols
-  if cols='' then cols='id name'
-  xcmd="'macro chooser" cols '--t' name "--multi'"
-  say xcmd; cb~copy(xcmd)
-  return
-
-convertBit: procedure expose cb
-  parse arg name title
-  coldef='convert('name',UNSIGNED INTEGER) AS' title
-  say name '->' coldef
-  cb~copy(coldef)
-  return
 
 help: procedure
   say 'dbu -- A utility tool, version' 0.2
